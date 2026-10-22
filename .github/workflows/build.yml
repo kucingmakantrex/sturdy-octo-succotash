@@ -3,7 +3,6 @@ name: Build APK
 on:
   push:
     branches: [ main, master ]
-  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -11,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Ekstrak sumber
+        run: unzip -q HiOSTilt-source.zip
 
       - uses: actions/setup-java@v4
         with:
@@ -22,9 +24,10 @@ jobs:
           gradle-version: "8.7"
 
       - name: Build debug APK
+        working-directory: HiOSTilt
         run: gradle :app:assembleDebug --stacktrace
 
       - uses: actions/upload-artifact@v4
         with:
           name: HiOSTilt-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: HiOSTilt/app/build/outputs/apk/debug/app-debug.apk
